@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["calendar"]});
+      google.load("visualization", "1.1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart1);
+      google.setOnLoadCallback(drawChart2);
+
+   function drawChart1() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Seconds up' });
+       dataTable.addRows([
+            // INSERT DATA1 HERE
+        ]);
+
+       var chart = new google.visualization.Calendar(document.getElementById('chart1'));
+
+       var options = {
+         title: "Alma Analytics Availability - Lancaster - EU00",
+         height: 350,
+       };
+
+       chart.draw(dataTable, options);
+   }
+   function drawChart2() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'datetime', id: 'DateTime' });
+       dataTable.addColumn({ type: 'number', id: 'Response Time' });
+       dataTable.addRows([
+           // INSERT DATA2 HERE
+       ]);
+
+       var chart = new google.visualization.LineChart(document.getElementById('chart2'));
+
+       var options = {
+           title: "Alma Analytics Response Time - Lancaster - EU00",
+           height: 400,
+           hAxis: {format: 'yy'}
+       };
+
+       chart.draw(dataTable, options);
+   }
+  </script>
+  </head>
+  <body>
+    <div id="chart1" style="width: 1000px; height: 350px;"></div>
+    <div id="chart2" style="width: 1000px; height: 400px;"></div>
+  </body>
+</html>

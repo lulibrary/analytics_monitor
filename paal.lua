@@ -229,6 +229,23 @@ local function mkjs_averages(u)
 end
 
 
+local function mkjs_range(u)
+    local js = ''
+    for d, averages in spairs(u) do
+        local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
+        local range = averages['range']
+        local max = averages['max']
+        local min = averages['min']
+        local line = string.format(
+            '[new Date(%s, %s, %s), %.4f, %.4f, %.4f],\n',
+            Y, M, D, range, max, min)
+        --noinspection StringConcatenationInLoops
+        js = js .. line
+    end
+    return js
+end
+
+
 -- main
 local uptimes = get_uptimes()
 
@@ -239,5 +256,7 @@ local js = mkjs_uptimes(daily_uptimes)
 local html = string.gsub(t_html, '//DATA1', js)
 local js = mkjs_averages(daily_averages)
 local html = string.gsub(html, '//DATA2', js)
+local js = mkjs_range(daily_averages)
+local html = string.gsub(html, '//DATA3', js)
 io.output(html_file)
 io.write(html)

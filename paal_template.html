@@ -5,6 +5,7 @@
       google.load("visualization", "1.1", {packages:["corechart", "line", "calendar"]});
       google.setOnLoadCallback(drawChart1);
       google.setOnLoadCallback(drawChart2);
+      google.setOnLoadCallback(drawChart3);
 
    function drawChart1() {
        var dataTable = new google.visualization.DataTable();
@@ -36,18 +37,40 @@
        var chart = new google.visualization.LineChart(document.getElementById('chart2'));
 
        var options = {
-           title: "Alma Analytics Response Time - Lancaster - EU00",
+           title: "Alma Analytics Response Time Averages - Lancaster - EU00",
            height: 400,
            curveType: 'function',
-           hAxis: {format: 'yy'},
+           hAxis: {format: 'MM-yy'},
        };
 
        chart.draw(dataTable, options);
    }
+      function drawChart3() {
+          var dataTable = new google.visualization.DataTable();
+          dataTable.addColumn('date', 'Date');
+          dataTable.addColumn('number', 'Range');
+          dataTable.addColumn('number', 'Max');
+          dataTable.addColumn('number', 'Min');
+          dataTable.addRows([
+              //DATA3
+          ]);
+
+          var chart = new google.visualization.LineChart(document.getElementById('chart3'));
+
+          var options = {
+              title: "Alma Analytics Response Time Range - Lancaster - EU00",
+              height: 400,
+              curveType: 'function',
+              hAxis: {format: 'MM-yy'},
+          };
+
+          chart.draw(dataTable, options);
+      }
   </script>
   </head>
   <body>
     <div id="chart1" style="width: 1000px; height: 350px;"></div>
     <div id="chart2" style="width: 1000px; height: 400px;"></div>
+    <div id="chart3" style="width: 1000px; height: 400px;"></div>
   </body>
 </html>

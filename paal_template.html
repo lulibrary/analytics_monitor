@@ -2,8 +2,7 @@
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-      google.load("visualization", "1.1", {packages:["calendar"]});
-      google.load("visualization", "1.1", {packages:["corechart"]});
+      google.load("visualization", "1.1", {packages:["corechart", "line", "calendar"]});
       google.setOnLoadCallback(drawChart1);
       google.setOnLoadCallback(drawChart2);
 
@@ -12,7 +11,7 @@
        dataTable.addColumn({ type: 'date', id: 'Date' });
        dataTable.addColumn({ type: 'number', id: 'Seconds up' });
        dataTable.addRows([
-            // INSERT DATA1 HERE
+            //DATA1
         ]);
 
        var chart = new google.visualization.Calendar(document.getElementById('chart1'));
@@ -26,10 +25,12 @@
    }
    function drawChart2() {
        var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn({ type: 'datetime', id: 'DateTime' });
-       dataTable.addColumn({ type: 'number', id: 'Response Time' });
+       dataTable.addColumn('date', 'Date');
+       dataTable.addColumn('number', 'Average');
+       dataTable.addColumn('number', 'Mode\n(Most likely)');
+       dataTable.addColumn('number', 'Median\n(Middle)');
        dataTable.addRows([
-           // INSERT DATA2 HERE
+           //DATA2
        ]);
 
        var chart = new google.visualization.LineChart(document.getElementById('chart2'));
@@ -37,7 +38,8 @@
        var options = {
            title: "Alma Analytics Response Time - Lancaster - EU00",
            height: 400,
-           hAxis: {format: 'yy'}
+           curveType: 'function',
+           hAxis: {format: 'yy'},
        };
 
        chart.draw(dataTable, options);

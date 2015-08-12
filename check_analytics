@@ -1,0 +1,26 @@
+#!/bin/bash
+
+home_page='https://api-na.hosted.exlibrisgroup.com/almaws/v1/analytics/reports?path=<analytics_path_to_your_report>&limit=25&apikey=<your_analytics_key'
+
+ret=$(curl -w '\n--TimeTotal : %{time_total}\n' \
+-s --include --request GET --connect-timeout 20 \
+--max-time 120 "$home_page" 2>&1)
+
+ok_result=$(echo "${ret}" | grep 'HTTP/1.1 200 OK')
+
+tm=$(echo "${ret}" | grep '^--TimeTotal' | awk '{print $3}')
+
+ts=$(date +%Y%m%d:%H%M%S)
+
+
+if [[ "${ok_result}" != "" ]]
+then
+	echo "${ts} up time=${tm}s" >> /var/tmp/alma_analytics.log
+	echo "0 alma_analytics time=${tm}s Alma Analytics"
+	exit 0
+else
+	echo "${ts} down time=${tm}s" >> /var/tmp/alma_analytics.log
+	echo "2 alma_analytics time=${tm}s Alma Analytics is down"
+	exit 2
+fi
+

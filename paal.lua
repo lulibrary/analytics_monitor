@@ -5,7 +5,10 @@ local html_template = 'paal_template.html'
 local html_file = 'paal.html'
 local ss = string.sub
 
--- some code spairs, tprint nicked from various lua tutorial sites
+--[[
+some code (spairs, tprint, compute_mode, compute_median) nicked from
+various lua tutorial sites
+--]]
 
 -- return table sorted by the index
 local function spairs(t, f)
@@ -251,7 +254,7 @@ end
 
 
 -- main
-local state, uptimes = get_uptimes()
+local current_state, uptimes = get_uptimes()
 local daily_averages = compute_averages(uptimes)
 local daily_uptimes = compute_state_times(uptimes)
 local t_html = readfile(html_template)
@@ -263,7 +266,13 @@ js = mkjs(daily_averages, { 'mode' })
 html = string.gsub(html, '//DATA3', js)
 js = mkjs(daily_averages, { 'range', 'max', 'min' })
 html = string.gsub(html, '//DATA4', js)
-html = string.gsub(html, 'AA_STATE', state)
+local state_s
+if current_state == 'up' then
+    state_s = '<span style="color: ForestGreen;">up</span>'
+else
+    state_s = '<span style="color: OrangeRed;">down</span>'
+end
+html = string.gsub(html, 'AA_STATE', state_s)
 io.output(html_file)
 io.write(html)
 

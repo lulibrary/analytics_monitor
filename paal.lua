@@ -184,6 +184,7 @@ local function get_uptimes()
     local first = true
     local current_date
     local current_state
+    local current_resp
 
     for l in io.lines(datafile) do
         local lt = {}
@@ -212,8 +213,9 @@ local function get_uptimes()
         }
         uptimes[current_date] = uptimes_day
         current_state = state
+        current_resp = string.format("%.3f", resp_time)
     end
-    return current_state, uptimes
+    return current_resp, current_state, uptimes
 end
 
 
@@ -254,7 +256,7 @@ end
 
 
 -- main
-local current_state, uptimes = get_uptimes()
+local current_resp, current_state, uptimes = get_uptimes()
 local daily_averages = compute_averages(uptimes)
 local daily_uptimes = compute_state_times(uptimes)
 local t_html = readfile(html_template)
@@ -267,12 +269,19 @@ html = string.gsub(html, '//DATA3', js)
 js = mkjs(daily_averages, { 'range', 'max', 'min' })
 html = string.gsub(html, '//DATA4', js)
 local state_s
+local bg_colour
 if current_state == 'up' then
+    bg_colour = '#f8fff4'
     state_s = '<span style="color: ForestGreen;">up</span>'
 else
+    bg_colour = '#fffaf9'
     state_s = '<span style="color: OrangeRed;">down</span>'
 end
 html = string.gsub(html, 'AA_STATE', state_s)
+local date_s = os.date("%A, %x %H:%M", os.time())
+html = string.gsub(html, 'CURRENT_DT', date_s)
+html = string.gsub(html, 'BG_COLOUR', bg_colour)
+html = string.gsub(html, 'AA_RESPONSE', current_resp)
 io.output(html_file)
 io.write(html)
 

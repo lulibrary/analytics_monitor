@@ -1,13 +1,15 @@
 <html>
 <head>
+    <meta http-equiv="refresh" content="30">
     <script type="text/javascript"
             src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        google.load("visualization", "1.1", {packages: ["corechart", "line", "calendar"]});
+        google.load("visualization", "1.1", {packages: ["corechart", "line", "calendar", "gauge"]});
         google.setOnLoadCallback(drawChart1);
         google.setOnLoadCallback(drawChart2);
         google.setOnLoadCallback(drawChart3);
         google.setOnLoadCallback(drawChart4);
+        google.setOnLoadCallback(drawChart5);
 
         function drawChart1() {
             var dataTable = new google.visualization.DataTable();
@@ -22,7 +24,8 @@
                 height: 350,
                 calendar: {
                     cellSize: 16
-                }
+                },
+                backgroundColor: "BG_COLOUR"
             };
             chart.draw(dataTable, options);
         }
@@ -40,7 +43,8 @@
                 title: "Alma Analytics Response Time - Average & Median - Lancaster - EU00",
                 height: 400,
                 //curveType: 'function',
-                hAxis: {format: 'MM-yy'}
+                hAxis: {format: 'MM-yy'},
+                backgroundColor: "BG_COLOUR"
             };
             chart.draw(dataTable, options);
         }
@@ -57,7 +61,8 @@
                 title: "Alma Analytics Response Time - Mode - Lancaster - EU00",
                 height: 400,
                 //curveType: 'function',
-                hAxis: {format: 'MM-yy'}
+                hAxis: {format: 'MM-yy'},
+                backgroundColor: "BG_COLOUR"
             };
             chart.draw(dataTable, options);
         }
@@ -76,14 +81,39 @@
                 title: "Alma Analytics Response Time Range - Lancaster - EU00",
                 height: 400,
                 //curveType: 'function',
-                hAxis: {format: 'MM-yy'}
+                hAxis: {format: 'MM-yy'},
+                backgroundColor: "BG_COLOUR"
             };
             chart.draw(dataTable, options);
         }
+
+        function drawChart5() {
+            var data = google.visualization.arrayToDataTable([
+                ['Label', 'Value'],
+                ['Response', AA_RESPONSE]
+            ]);
+            var options = {
+                width: 140, height: 140,
+                redFrom: 8, redTo: 10,
+                yellowFrom: 6, yellowTo: 8,
+                minorTicks: 10,
+                max: 10, min: 0
+            };
+            var chart = new google.visualization.Gauge(document.getElementById('chart5'));
+            chart.draw(data, options);
+        }
     </script>
 </head>
-<body>
-<h1 style="text-align: center">Alma Analytics - Lancaster - EU00 - is AA_STATE</h1>
+<body bgcolor="BG_COLOUR">
+<section style="width:90%; height: 140px; margin: auto; padding: 10px;">
+    <div style="width: 80%; height: 140px; float: left;">
+        <h1 style="text-align: center">Alma Analytics - Lancaster - EU00 -
+            is
+            AA_STATE</h1>
+        <h4 style="text-align: center">CURRENT_DT</h4>
+    </div>
+    <div id="chart5" style="height: 140px; margin-left: 20%;"></div>
+</section>
 <div id="chart2" style="width: 100%; height: 350px;"></div>
 <div id="chart3" style="width: 100%; height: 350px;"></div>
 <div id="chart4" style="width: 100%; height: 350px;"></div>

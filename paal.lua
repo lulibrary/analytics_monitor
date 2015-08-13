@@ -138,11 +138,11 @@ end
 
 local function compute_state_times(u)
     local daily_uptime = {}
-    for date, day_date in spairs(u) do
+    for date, day_data in spairs(u) do
         local up, down = 0, 0
         local last_es, first = nil, true
         local last_time, last_state
-        for time, data in spairs(day_date) do
+        for time, data in spairs(day_data) do
             local state = data['state']
             local es = data['seconds']
             if first then
@@ -155,7 +155,7 @@ local function compute_state_times(u)
             last_time = time
             last_state = state
         end
-        last_es = day_date[last_time]['seconds']
+        last_es = day_data[last_time]['seconds']
         local midnight = dt2secs(date, '235959') + 1
         up, down = sum_state_secs(up, down,
             midnight - last_es, last_state)
@@ -175,6 +175,16 @@ local function readfile(file)
     local content = f:read("*all")
     f:close()
     return content
+end
+
+
+local function compute_hours_resp(u)
+    local hourly_responses = {}
+    for date, day_data in spairs(u) do
+        for time, data in spairs(day_data) do
+            local hour = ss(time, 1, 2)
+        end
+    end
 end
 
 
@@ -284,4 +294,4 @@ html = string.gsub(html, 'BG_COLOUR', bg_colour)
 html = string.gsub(html, 'AA_RESPONSE', current_resp)
 io.output(html_file)
 io.write(html)
-
+--compute_hours_resp(uptimes)

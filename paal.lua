@@ -1,9 +1,11 @@
-#!/usr/bin/lua
+#! /usr/bin/lua
 
 local datafile = 'alma_analytics.log'
 local html_template = 'paal_template.html'
 local html_file = 'paal.html'
 local ss = string.sub
+
+-- some code spairs, tprint nicked from various lua tutorial sites
 
 -- return table sorted by the index
 local function spairs(t, f)
@@ -13,7 +15,7 @@ local function spairs(t, f)
     end
     table.sort(a, f)
     local i = 0
-    local iter = function ()
+    local iter = function()
         i = i + 1
         if a[i] == nil then
             return nil
@@ -24,9 +26,12 @@ local function spairs(t, f)
     return iter
 end
 
+
 -- return epoch seconds from date, time
 local function ts2secs(Y, M, D, h, m, s)
-    return os.time({year=Y, month=M, day=D, hour=h, min=m, sec=s})
+    return os.time({
+        year = Y, month = M, day = D, hour = h, min = m, sec = s
+    })
 end
 
 
@@ -65,7 +70,7 @@ local function compute_mode(t)
         end
     end
     local biggestCount = 0
-    for _, v  in pairs(counts) do
+    for _, v in pairs(counts) do
         if v > biggestCount then
             biggestCount = v
         end
@@ -79,13 +84,14 @@ local function compute_mode(t)
     return mode
 end
 
+
 local function compute_median(t)
     table.sort(t)
     local mt_sz = #t
     if (mt_sz % 2) == 0 then
-        return t[mt_sz/2] + t[mt_sz/2 + 1]
+        return t[mt_sz / 2] + t[mt_sz / 2 + 1]
     else
-        return t[math.ceil(mt_sz/2)]
+        return t[math.ceil(mt_sz / 2)]
     end
 end
 
@@ -109,10 +115,12 @@ local function compute_averages(u)
             min = min,
             max = max,
             range = max - min,
-            mode = compute_mode(mm_table)}
+            mode = compute_mode(mm_table)
+        }
     end
     return daily_averages
 end
+
 
 local function sum_state_secs(u, d, a, state)
     local up, down = u, d
@@ -124,7 +132,8 @@ local function sum_state_secs(u, d, a, state)
     return up, down
 end
 
-local function compute_state_seconds(u)
+
+local function compute_state_times(u)
     local daily_uptime = {}
     for date, day_date in spairs(u) do
         local up, down = 0, 0
@@ -146,10 +155,15 @@ local function compute_state_seconds(u)
         last_es = day_date[last_time]['seconds']
         local midnight = dt2secs(date, '235959') + 1
         up, down = sum_state_secs(up, down,
-            midnight-last_es, last_state)
-        daily_uptime[date] = {up = up, down = down}
+            midnight - last_es, last_state)
+        daily_uptime[date] = {
+            up = up,
+            down = down,
+            up_hours = up / 60 / 60,
+            down_hours = down / 60 / 60
+        }
     end
-    return(daily_uptime)
+    return (daily_uptime)
 end
 
 
@@ -166,6 +180,7 @@ local function get_uptimes()
     local uptimes_day = {}
     local first = true
     local current_date
+    local current_state
 
     for l in io.lines(datafile) do
         local lt = {}
@@ -193,52 +208,41 @@ local function get_uptimes()
             resp_time = resp_time
         }
         uptimes[current_date] = uptimes_day
+        current_state = state
     end
-    return uptimes
+    return current_state, uptimes
 end
 
 
-local function mkjs_uptimes(u)
-    local js = ''
-    for d, uptime in spairs(u) do
-        local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
-        local u_hrs = uptime['up'] / 60 / 60
-        local line = string.format('[new Date(%s, %s, %s), %.2f],\n',
-            Y, M, D, u_hrs)
+local function repeat_s(s, n)
+    local ns = ''
+    for _ = 1, n do
         --noinspection StringConcatenationInLoops
-        js = js .. line
+        ns = ns .. s .. ', '
     end
-    return js
+    ns = string.gsub(ns, ', $', '')
+    return ns
 end
 
 
-local function mkjs_averages(u)
+local function mkjs(date_data, fields)
+    local precisions = {
+        mean = 2, median = 1, mode = 3,
+        range = 1, max = 1, min = 1,
+        up_hours = 2, down_hours = 2
+    }
     local js = ''
-    for d, averages in spairs(u) do
+    local nfields = #fields
+    for d, data in spairs(date_data) do
+        local data_list = {}
         local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
-        local mean = averages['mean']
-        local mode = averages['mode']
-        local median = averages['median']
-        local line = string.format(
-            '[new Date(%s, %s, %s), %.4f, %.4f, %.4f],\n',
-            Y, M, D, mean, mode, median)
-        --noinspection StringConcatenationInLoops
-        js = js .. line
-    end
-    return js
-end
-
-
-local function mkjs_range(u)
-    local js = ''
-    for d, averages in spairs(u) do
-        local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
-        local range = averages['range']
-        local max = averages['max']
-        local min = averages['min']
-        local line = string.format(
-            '[new Date(%s, %s, %s), %.4f, %.4f, %.4f],\n',
-            Y, M, D, range, max, min)
+        for _, f in pairs(fields) do
+            local format = '%.' .. precisions[f] .. 'f'
+            data_list[#data_list + 1] = string.format(format, data[f])
+        end
+        local fmt = '[new Date(%s, %s, %s), ' ..
+                repeat_s('%s', nfields) .. '],\n'
+        local line = string.format(fmt, Y, M, D, table.unpack(data_list))
         --noinspection StringConcatenationInLoops
         js = js .. line
     end
@@ -247,16 +251,19 @@ end
 
 
 -- main
-local uptimes = get_uptimes()
-
+local state, uptimes = get_uptimes()
 local daily_averages = compute_averages(uptimes)
-local daily_uptimes = compute_state_seconds(uptimes)
+local daily_uptimes = compute_state_times(uptimes)
 local t_html = readfile(html_template)
-local js = mkjs_uptimes(daily_uptimes)
+local js = mkjs(daily_uptimes, { 'up_hours' })
 local html = string.gsub(t_html, '//DATA1', js)
-local js = mkjs_averages(daily_averages)
-local html = string.gsub(html, '//DATA2', js)
-local js = mkjs_range(daily_averages)
-local html = string.gsub(html, '//DATA3', js)
+js = mkjs(daily_averages, { 'mean', 'median' })
+html = string.gsub(html, '//DATA2', js)
+js = mkjs(daily_averages, { 'mode' })
+html = string.gsub(html, '//DATA3', js)
+js = mkjs(daily_averages, { 'range', 'max', 'min' })
+html = string.gsub(html, '//DATA4', js)
+html = string.gsub(html, 'AA_STATE', state)
 io.output(html_file)
 io.write(html)
+

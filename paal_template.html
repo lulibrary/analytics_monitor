@@ -1,76 +1,96 @@
 <html>
-  <head>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<head>
+    <script type="text/javascript"
+            src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-      google.load("visualization", "1.1", {packages:["corechart", "line", "calendar"]});
-      google.setOnLoadCallback(drawChart1);
-      google.setOnLoadCallback(drawChart2);
-      google.setOnLoadCallback(drawChart3);
+        google.load("visualization", "1.1", {packages: ["corechart", "line", "calendar"]});
+        google.setOnLoadCallback(drawChart1);
+        google.setOnLoadCallback(drawChart2);
+        google.setOnLoadCallback(drawChart3);
+        google.setOnLoadCallback(drawChart4);
 
-   function drawChart1() {
-       var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn({ type: 'date', id: 'Date' });
-       dataTable.addColumn({ type: 'number', id: 'Seconds up' });
-       dataTable.addRows([
-            //DATA1
-        ]);
+        function drawChart1() {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn({type: 'date', id: 'Date'});
+            dataTable.addColumn({type: 'number', id: 'Hours up'});
+            dataTable.addRows([
+                //DATA1
+            ]);
+            var chart = new google.visualization.Calendar(document.getElementById('chart1'));
+            var options = {
+                title: "Alma Analytics Availability - Lancaster - EU00",
+                height: 350,
+                calendar: {
+                    cellSize: 16
+                }
+            };
+            chart.draw(dataTable, options);
+        }
 
-       var chart = new google.visualization.Calendar(document.getElementById('chart1'));
+        function drawChart2() {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('date', 'Date');
+            dataTable.addColumn('number', 'Average');
+            dataTable.addColumn('number', 'Median\n(Middle)');
+            dataTable.addRows([
+                //DATA2
+            ]);
+            var chart = new google.visualization.LineChart(document.getElementById('chart2'));
+            var options = {
+                title: "Alma Analytics Response Time - Average & Median - Lancaster - EU00",
+                height: 400,
+                //curveType: 'function',
+                hAxis: {format: 'MM-yy'}
+            };
+            chart.draw(dataTable, options);
+        }
 
-       var options = {
-         title: "Alma Analytics Availability - Lancaster - EU00",
-         height: 350,
-       };
+        function drawChart3() {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('date', 'Date');
+            dataTable.addColumn('number', 'Mode\n(Most likely)');
+            dataTable.addRows([
+                //DATA3
+            ]);
+            var chart = new google.visualization.LineChart(document.getElementById('chart3'));
+            var options = {
+                title: "Alma Analytics Response Time - Mode - Lancaster - EU00",
+                height: 400,
+                //curveType: 'function',
+                hAxis: {format: 'MM-yy'}
+            };
+            chart.draw(dataTable, options);
+        }
 
-       chart.draw(dataTable, options);
-   }
-   function drawChart2() {
-       var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn('date', 'Date');
-       dataTable.addColumn('number', 'Average');
-       dataTable.addColumn('number', 'Mode\n(Most likely)');
-       dataTable.addColumn('number', 'Median\n(Middle)');
-       dataTable.addRows([
-           //DATA2
-       ]);
+        function drawChart4() {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('date', 'Date');
+            dataTable.addColumn('number', 'Range');
+            dataTable.addColumn('number', 'Max');
+            dataTable.addColumn('number', 'Min');
+            dataTable.addRows([
+                //DATA4
+            ]);
+            var chart = new google.visualization.LineChart(document.getElementById('chart4'));
+            var options = {
+                title: "Alma Analytics Response Time Range - Lancaster - EU00",
+                height: 400,
+                //curveType: 'function',
+                hAxis: {format: 'MM-yy'}
+            };
+            chart.draw(dataTable, options);
+        }
+    </script>
+</head>
+<body>
+<h2 style="text-align: center">Alma Analytics - Lancaster - EU00 - is currently AA_STATE</h2>
+<div id="chart2" style="width: 100%; height: 350px;"></div>
+<div id="chart3" style="width: 100%; height: 350px;"></div>
+<div id="chart4" style="width: 100%; height: 350px;"></div>
+<br/><br/><br/>
 
-       var chart = new google.visualization.LineChart(document.getElementById('chart2'));
-
-       var options = {
-           title: "Alma Analytics Response Time Averages - Lancaster - EU00",
-           height: 400,
-           curveType: 'function',
-           hAxis: {format: 'MM-yy'},
-       };
-
-       chart.draw(dataTable, options);
-   }
-      function drawChart3() {
-          var dataTable = new google.visualization.DataTable();
-          dataTable.addColumn('date', 'Date');
-          dataTable.addColumn('number', 'Range');
-          dataTable.addColumn('number', 'Max');
-          dataTable.addColumn('number', 'Min');
-          dataTable.addRows([
-              //DATA3
-          ]);
-
-          var chart = new google.visualization.LineChart(document.getElementById('chart3'));
-
-          var options = {
-              title: "Alma Analytics Response Time Range - Lancaster - EU00",
-              height: 400,
-              curveType: 'function',
-              hAxis: {format: 'MM-yy'},
-          };
-
-          chart.draw(dataTable, options);
-      }
-  </script>
-  </head>
-  <body>
-    <div id="chart1" style="width: 1000px; height: 350px;"></div>
-    <div id="chart2" style="width: 1000px; height: 400px;"></div>
-    <div id="chart3" style="width: 1000px; height: 400px;"></div>
-  </body>
+<div style="position:relative; left:10%; margin: 0 auto;">
+    <div id="chart1" style="width: 100%; height: 600px;"></div>
+</div>
+</body>
 </html>

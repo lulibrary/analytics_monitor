@@ -19,4 +19,9 @@ log file with entries like:
 This log file is used as input to the lua script `paal.lua` which computes
 the averages for response and calculates the daily uptimes. It uses
 `paal_template.html` and inserts javascript statements and writes out
-`paal.html`.
+`paal.html`. Google Charts are used to display the graphs.
+
+You will need some scaffolding to collect the log from wherever it is
+generated, run the lua script over it and move the result to somewhere
+for viewing,
+

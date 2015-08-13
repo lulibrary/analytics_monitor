@@ -23,5 +23,10 @@ the averages for response and calculates the daily uptimes. It uses
 
 You will need some scaffolding to collect the log from wherever it is
 generated, run the lua script over it and move the result to somewhere
-for viewing,
+for viewing.
+
+## To do
+
+- Maybe store the log entries and results in a database rather than keep
+processing the whole log file.
 

@@ -1,36 +1,40 @@
 <html>
 <head>
-    <meta http-equiv="refresh" content="30">
+    <!--<meta http-equiv="refresh" content="30">-->
     <script type="text/javascript"
             src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        google.load("visualization", "1.1", {packages: ["corechart", "line", "calendar", "gauge"]});
-        google.setOnLoadCallback(drawChart1);
-        google.setOnLoadCallback(drawChart2);
-        google.setOnLoadCallback(drawChart3);
-        google.setOnLoadCallback(drawChart4);
-        google.setOnLoadCallback(drawChart5);
+        google.load("visualization", "1.1",
+                {packages: ["corechart", "line", "calendar",
+                    "gauge", "scatter", "table"]});
+        google.setOnLoadCallback(drawChartCalendar);
+        google.setOnLoadCallback(drawChartAvg);
+        google.setOnLoadCallback(drawChartMode);
+        google.setOnLoadCallback(drawChartMaxMin);
+        google.setOnLoadCallback(drawChartGauge);
+        google.setOnLoadCallback(drawChartOutTable);
 
-        function drawChart1() {
+        function drawChartCalendar() {
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn({type: 'date', id: 'Date'});
             dataTable.addColumn({type: 'number', id: 'Hours up'});
             dataTable.addRows([
                 //DATA1
             ]);
-            var chart = new google.visualization.Calendar(document.getElementById('chart1'));
+            var chart = new google.visualization.Calendar(
+                    document.getElementById('chart_calendar'));
             var options = {
                 title: "Alma Analytics Availability - Lancaster - EU00",
-                height: 350,
+                //height: 350,
                 calendar: {
                     cellSize: 16
                 },
-                backgroundColor: "BG_COLOUR"
+                backgroundColor: "//BG_COLOUR"
             };
             chart.draw(dataTable, options);
         }
 
-        function drawChart2() {
+        function drawChartAvg() {
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('date', 'Date');
             dataTable.addColumn('number', 'Average');
@@ -38,89 +42,182 @@
             dataTable.addRows([
                 //DATA2
             ]);
-            var chart = new google.visualization.LineChart(document.getElementById('chart2'));
+            var chart = new google.visualization.LineChart(
+                    document.getElementById('chart_average'));
             var options = {
-                title: "Alma Analytics Response Time - Average & Median - Lancaster - EU00",
+                title: "Alma Analytics Response Time - Average & Median " +
+                    "- Lancaster - EU00",
                 height: 400,
-                //curveType: 'function',
+                curveType: 'function',
                 hAxis: {format: 'MM-yy'},
-                backgroundColor: "BG_COLOUR"
+                backgroundColor: "//BG_COLOUR",
+                trendlines: {
+                    0: {
+                        type: 'polynomial',
+                        color: 'green',
+                        lineWidth: 3,
+                        opacity: 0.5,
+                        labelInLegend: 'Avg. Trend',
+                        visibleInLegend: true
+                    }
+                }
             };
             chart.draw(dataTable, options);
         }
 
-        function drawChart3() {
+        function drawChartMode() {
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('date', 'Date');
             dataTable.addColumn('number', 'Mode\n(Most likely)');
             dataTable.addRows([
                 //DATA3
             ]);
-            var chart = new google.visualization.LineChart(document.getElementById('chart3'));
+            var chart = new google.visualization.LineChart(
+                    document.getElementById('chart_mode'));
             var options = {
-                title: "Alma Analytics Response Time - Mode - Lancaster - EU00",
+                title: "Alma Analytics Response Time - Mode - " +
+                    "Lancaster - EU00",
                 height: 400,
-                //curveType: 'function',
+                curveType: 'function',
                 hAxis: {format: 'MM-yy'},
-                backgroundColor: "BG_COLOUR"
+                backgroundColor: "//BG_COLOUR",
+                trendlines: {
+                    0: {
+                        type: 'polynomial',
+                        color: 'green',
+                        lineWidth: 3,
+                        opacity: 0.5,
+                        labelInLegend: 'Mode Trend',
+                        visibleInLegend: true
+                    }
+                }
             };
             chart.draw(dataTable, options);
         }
 
-        function drawChart4() {
+        function drawChartMaxMin() {
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('date', 'Date');
-            dataTable.addColumn('number', 'Range');
             dataTable.addColumn('number', 'Max');
             dataTable.addColumn('number', 'Min');
             dataTable.addRows([
                 //DATA4
             ]);
-            var chart = new google.visualization.LineChart(document.getElementById('chart4'));
+            var chart = new google.visualization.LineChart(
+                    document.getElementById('chart_max_min'));
             var options = {
-                title: "Alma Analytics Response Time Range - Lancaster - EU00",
+                title: "Alma Analytics Response Time Max/Min - " +
+                    "Lancaster - EU00",
                 height: 400,
-                //curveType: 'function',
+                curveType: 'function',
                 hAxis: {format: 'MM-yy'},
-                backgroundColor: "BG_COLOUR"
+                vAxis: {minValue: 0, viewWindow: {min:0 }},
+                backgroundColor: "//BG_COLOUR",
+                trendlines: {
+                    0: {
+                        type: 'polynomial',
+                        color: 'green',
+                        lineWidth: 3,
+                        opacity: 0.5,
+                        labelInLegend: 'Max Trend',
+                        visibleInLegend: true
+                    }
+                }
             };
             chart.draw(dataTable, options);
         }
 
-        function drawChart5() {
+        function drawChartGauge() {
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['Response', AA_RESPONSE]
+                ['Response', //AA_RESPONSE
+                ]
             ]);
             var options = {
                 width: 140, height: 140,
                 redFrom: 8, redTo: 10,
                 yellowFrom: 6, yellowTo: 8,
                 minorTicks: 10,
-                max: 10, min: 0
+                max: 10, min: 0,
+                backgroundColor: "//BG_COLOUR"
             };
-            var chart = new google.visualization.Gauge(document.getElementById('chart5'));
+            var chart = new google.visualization.Gauge(
+                    document.getElementById('chart_gauge'));
             chart.draw(data, options);
+        }
+
+        function drawChartOutTable() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'Start');
+            data.addColumn('datetime', 'End');
+            data.addColumn('number', 'Length');
+            data.addRows([
+                //DATA7
+            ]);
+
+            var table = new google.visualization.Table(
+                    document.getElementById('chart_outage_table'));
+            var formatter = new google.visualization.DateFormat(
+                    {pattern: 'dd/MM/yyyy HH:mm:ss - EEEE'});
+            formatter.format(data, 0);
+            formatter.format(data, 1);
+            table.draw(data, {
+                //sort: 'enabled',
+                sortAscending: false,
+                sortColumn: 0,
+                allowHtml: true,
+                showRowNumber: true,
+                width: '75%',
+                alternatingRowStyle: true
+            });
         }
     </script>
 </head>
-<body bgcolor="BG_COLOUR">
-<section style="width:100%; height: 140px; margin: auto; padding: 10px;">
-    <div style="width: 80%; height: 140px; float: left;">
-        <h1 style="text-align: center">Alma Analytics - Lancaster - EU00 -
-            is
-            AA_STATE</h1>
-        <h4 style="text-align: center">CURRENT_DT</h4>
-    </div>
-    <div id="chart5" style="height: 140px; margin-left: 20%;"></div>
-</section>
-<div id="chart2" style="width: 100%; height: 350px;"></div>
-<div id="chart3" style="width: 100%; height: 350px;"></div>
-<div id="chart4" style="width: 100%; height: 350px;"></div>
-<br/><br/><br/>
+<body bgcolor="//BG_COLOUR">
 
-<div style="position:relative; left:5%; margin: 0 auto;">
-    <div id="chart1" style="width: 100%; height: 600px;"></div>
+<style>
+    .google-visualization-table-th {
+        text-align: left !important;
+        background-color: whitesmoke;
+        font-size: 15px;
+        border: solid;
+        border-bottom-color: darkgreen !important;
+    }
+    .google-visualization-table-td {
+        text-align: left !important;
+        font-size: 15px;
+    }
+</style>
+
+<section style="position: relative; width:95%; height: 140px;
+    margin: auto; padding: 5px;">
+    <div style="float: left; width:20%; height: 140px; margin-top: 50px;">
+        <a href="http://lancaster.ac.uk/library">
+            <img style="width: 140%;"
+                 src="http://www.lancaster.ac.uk/media/wdp/style-assets/images/library/library.png">
+        </a>
+    </div>
+    <div style=" width: 65%; float: left; height: 140px;
+        font-family: sans-serif; margin-top: 15px;">
+        <h1 style="text-align: center">Alma Analytics - Lancaster - EU00 -
+            is //AA_STATE</h1>
+        <h4 style="text-align: center;">//CURRENT_DT</h4>
+    </div>
+    <div id="chart_gauge"
+         style="float: right; width: 15%; height: 140px"></div>
+</section>
+
+<div id="chart_calendar" style="width: 980px; height: auto;
+    overflow: hidden; margin-top: 45px; margin-left: auto; margin-right: auto;"></div>
+<div id="chart_average" style="width: 100%; height: 350px;"></div>
+<div id="chart_mode" style="width: 100%; height: 350px;"></div>
+<div id="chart_max_min" style="width: 100%; height: 350px;"></div>
+<div align="center">
+    <h5 style="margin-top: 60px; font-family: sans-serif; font-size: 16px;">
+        Outages (>= //OUTMINS minutes), including scheduled maintenance.
+    </h5>
+    <div id="chart_outage_table" style="display: block; margin: 0 auto;
+        width: 100%; height: 500px;"></div>
 </div>
 </body>
 </html>

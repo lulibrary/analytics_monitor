@@ -178,23 +178,11 @@ local function readfile(file)
 end
 
 
-local function compute_hours_resp(u)
-    local hourly_responses = {}
-    for date, day_data in spairs(u) do
-        for time, data in spairs(day_data) do
-            local hour = ss(time, 1, 2)
-        end
-    end
-end
-
-
 local function get_uptimes()
     local uptimes = {}
     local uptimes_day = {}
     local first = true
-    local current_date
-    local current_state
-    local current_resp
+    local current_date, current_state, current_resp
 
     for l in io.lines(datafile) do
         local lt = {}
@@ -265,19 +253,90 @@ local function mkjs(date_data, fields)
 end
 
 
+local function mk_downtime_table(u, min_len)
+    local dt_table = {}
+    local current_state, first = nil , true
+    local start_date, start_time, end_date, end_time
+    for date, day_data in spairs(u) do
+        for time, data in spairs(day_data) do
+            local state = data['state']
+            if first then
+                first = false
+                current_state = state
+                if current_state == 'down' then
+                    start_date = date
+                    start_time = time
+                end
+            end
+            if not (current_state == state) then
+                if state == 'down' then
+                    start_date = date
+                    start_time = time
+                else
+                    end_date = date
+                    end_time = time
+                    local i_length = dt2secs(end_date, end_time)
+                            - dt2secs(start_date, start_time)
+                    if (i_length >= (min_len * 60)) then
+                        dt_table[#dt_table + 1] = {
+                            start_dt = start_date .. ':' .. start_time,
+                            end_dt = end_date .. ':' .. end_time
+                        }
+                    end
+                end
+            end
+            current_state = state
+        end
+    end
+    return dt_table
+end
+
+local function mkjs_dt_table(dt)
+    local js = ''
+    for _, incident in pairs(dt) do
+        local sd = incident['start_dt']
+        local ed = incident['end_dt']
+        local stY, stM, stD = ss(sd, 1, 4), ss(sd, 5, 6), ss(sd, 7, 8)
+        local sth, stm, sts = ss(sd, 10, 11), ss(sd, 12, 13), ss(sd, 14, 15)
+        local edY, edM, edD = ss(ed, 1, 4), ss(ed, 5, 6), ss(ed, 7, 8)
+        local edh, edm, eds = ss(ed, 10, 11), ss(ed, 12, 13), ss(ed, 14, 15)
+        local start_secs = ts2secs(stY, stM, stD, sth, stm, sts)
+        local end_secs = ts2secs(edY, edM, edD, edh, edm, eds)
+        local out_s = end_secs - start_secs
+        local out_label = string.format("%02d:%02d:%02d",
+            out_s/(60*60), out_s/60%60, out_s%60)
+        local fmt = '[new Date(%4d, %02d, %02d, %02d, %02d, %02d), ' ..
+                'new Date(%4d, %02d, %02d, %02d, %02d, %02d), {v:%d, f:\'%s\'}],\n'
+        local line = string.format(
+            fmt,
+            stY, stM, stD, sth, stm, sts,
+            edY, edM, edD, edh, edm, eds,
+            out_s, out_label
+        )
+        --noinspection StringConcatenationInLoops
+        js = js .. line
+    end
+    return js
+end
+
 -- main
+local out_mins = 2
 local current_resp, current_state, uptimes = get_uptimes()
 local daily_averages = compute_averages(uptimes)
 local daily_uptimes = compute_state_times(uptimes)
+local downtimes = mk_downtime_table(uptimes, out_mins)
 local t_html = readfile(html_template)
-local js = mkjs(daily_uptimes, { 'up_hours' })
+local js = mkjs(daily_uptimes, {'up_hours'})
 local html = string.gsub(t_html, '//DATA1', js)
-js = mkjs(daily_averages, { 'mean', 'median' })
+js = mkjs(daily_averages, {'mean', 'median'})
 html = string.gsub(html, '//DATA2', js)
-js = mkjs(daily_averages, { 'mode' })
+js = mkjs(daily_averages, {'mode'})
 html = string.gsub(html, '//DATA3', js)
-js = mkjs(daily_averages, { 'range', 'max', 'min' })
+js = mkjs(daily_averages, {'max', 'min'})
 html = string.gsub(html, '//DATA4', js)
+js = mkjs_dt_table(downtimes)
+html = string.gsub(html, '//DATA7', js)
+html = string.gsub(html, '//OUTMINS', out_mins)
 local state_s
 local bg_colour
 if current_state == 'up' then
@@ -287,11 +346,10 @@ else
     bg_colour = '#fffaf9'
     state_s = '<span style="color: OrangeRed;">down</span>'
 end
-html = string.gsub(html, 'AA_STATE', state_s)
+html = string.gsub(html, '//AA_STATE', state_s)
 local date_s = os.date("%A, %x %H:%M", os.time())
-html = string.gsub(html, 'CURRENT_DT', date_s)
-html = string.gsub(html, 'BG_COLOUR', bg_colour)
-html = string.gsub(html, 'AA_RESPONSE', current_resp)
+html = string.gsub(html, '//CURRENT_DT', date_s)
+html = string.gsub(html, '//BG_COLOUR', bg_colour)
+html = string.gsub(html, '//AA_RESPONSE', current_resp)
 io.output(html_file)
 io.write(html)
---compute_hours_resp(uptimes)

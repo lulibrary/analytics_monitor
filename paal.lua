@@ -351,5 +351,13 @@ local date_s = os.date("%A, %x %H:%M", os.time())
 html = string.gsub(html, '//CURRENT_DT', date_s)
 html = string.gsub(html, '//BG_COLOUR', bg_colour)
 html = string.gsub(html, '//AA_RESPONSE', current_resp)
+local logo_img_uri = 'http://www.lancaster.ac.uk/media/wdp/style-assets/images/library/library.png'
+html = string.gsub(html, '//LOGO_IMG_URI', logo_img_uri)
+local logo_link_uri = 'http://lancaster.ac.uk/library'
+html = string.gsub(html, '//LOGO_LINK_URI', logo_link_uri)
+local institution = 'Lancaster'
+html = string.gsub(html, '//INSTITUTION', institution)
+local alma_instance = 'EU00'
+html = string.gsub(html, '//ALMA_INSTANCE', alma_instance)
 io.output(html_file)
 io.write(html)

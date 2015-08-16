@@ -1,6 +1,6 @@
 <html>
 <head>
-    <!--<meta http-equiv="refresh" content="30">-->
+    <meta http-equiv="refresh" content="30">
     <script type="text/javascript"
             src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -24,8 +24,8 @@
             var chart = new google.visualization.Calendar(
                     document.getElementById('chart_calendar'));
             var options = {
-                title: "Alma Analytics Availability - Lancaster - EU00",
-                //height: 350,
+                title: "Alma Analytics Availability - " +
+                    "//INSTITUTION - //ALMA_INSTANCE",
                 calendar: {
                     cellSize: 16
                 },
@@ -46,7 +46,7 @@
                     document.getElementById('chart_average'));
             var options = {
                 title: "Alma Analytics Response Time - Average & Median " +
-                    "- Lancaster - EU00",
+                    "- //INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
                 hAxis: {format: 'MM-yy'},
@@ -76,7 +76,7 @@
                     document.getElementById('chart_mode'));
             var options = {
                 title: "Alma Analytics Response Time - Mode - " +
-                    "Lancaster - EU00",
+                    "//INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
                 hAxis: {format: 'MM-yy'},
@@ -107,7 +107,7 @@
                     document.getElementById('chart_max_min'));
             var options = {
                 title: "Alma Analytics Response Time Max/Min - " +
-                    "Lancaster - EU00",
+                    "//INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
                 hAxis: {format: 'MM-yy'},
@@ -192,14 +192,15 @@
 <section style="position: relative; width:95%; height: 140px;
     margin: auto; padding: 5px;">
     <div style="float: left; width:20%; height: 140px; margin-top: 50px;">
-        <a href="http://lancaster.ac.uk/library">
+        <a href="//LOGO_LINK_URI">
             <img style="width: 140%;"
-                 src="http://www.lancaster.ac.uk/media/wdp/style-assets/images/library/library.png">
+                 src="//LOGO_IMG_URI">
         </a>
     </div>
     <div style=" width: 65%; float: left; height: 140px;
         font-family: sans-serif; margin-top: 15px;">
-        <h1 style="text-align: center">Alma Analytics - Lancaster - EU00 -
+        <h1 style="text-align: center">
+            Alma Analytics - //INSTITUTION - //ALMA_INSTANCE -
             is //AA_STATE</h1>
         <h4 style="text-align: center;">//CURRENT_DT</h4>
     </div>
@@ -208,13 +209,15 @@
 </section>
 
 <div id="chart_calendar" style="width: 980px; height: auto;
-    overflow: hidden; margin-top: 45px; margin-left: auto; margin-right: auto;"></div>
+    overflow: hidden; margin-top: 45px; margin-left: auto;
+    margin-right: auto;"></div>
 <div id="chart_average" style="width: 100%; height: 350px;"></div>
 <div id="chart_mode" style="width: 100%; height: 350px;"></div>
 <div id="chart_max_min" style="width: 100%; height: 350px;"></div>
 <div align="center">
     <h5 style="margin-top: 60px; font-family: sans-serif; font-size: 16px;">
-        Outages (>= //OUTMINS minutes), including scheduled maintenance.
+        Outages - //INSTITUTION - //ALMA_INSTANCE (>= //OUTMINS minutes),
+        including scheduled maintenance.
     </h5>
     <div id="chart_outage_table" style="display: block; margin: 0 auto;
         width: 100%; height: 500px;"></div>

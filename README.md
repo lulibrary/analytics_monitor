@@ -4,6 +4,8 @@
 
 - For the current day the current state is assumed to last till the end
 of the day.
+- There is a lot of plumbing between a local API call to analytics and
+Analytics at the data centre. All of which affects response times.
 
 ## How it works
 
@@ -29,5 +31,6 @@ for viewing.
 
 - Store the log entries and results in a database rather than keep
 processing the whole log file. Currently runs fast but as the logfile
-gets larger .....
+grows .....
+- Probably many other things should someone be interested.
 

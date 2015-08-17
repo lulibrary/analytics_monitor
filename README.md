@@ -2,6 +2,7 @@
 
 ## Foibles
 
+- paal = process alma analytics log.
 - For the current day the current state is assumed to last till the end
 of the day.
 - There is a lot of plumbing between a local API call to analytics and
@@ -32,5 +33,6 @@ for viewing.
 - Store the log entries and results in a database rather than keep
 processing the whole log file. Currently runs fast but as the logfile
 grows .....
+- Clean up the mess that is paal_template.html.
 - Probably many other things should someone be interested.
 

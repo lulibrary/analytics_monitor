@@ -5,10 +5,12 @@ local html_template = 'paal_template.html'
 local html_file = 'paal.html'
 local ss = string.sub
 
+
 --[[
 some code (spairs, tprint, compute_mode, compute_median) nicked from
 various lua tutorial sites
 --]]
+
 
 -- return table sorted by the index
 local function spairs(t, f)
@@ -180,10 +182,12 @@ end
 
 local function get_uptimes()
     local uptimes = {}
+    local num_dp = 0
     local uptimes_day = {}
     local first = true
     local current_date, current_state, current_resp
-
+    local current_state_start_time, current_state_time = 0, 0
+    local current_state_start_time_str
     for l in io.lines(datafile) do
         local lt = {}
         for w in string.gmatch(l, '%S+') do
@@ -199,6 +203,11 @@ local function get_uptimes()
             if first then
                 first = false
                 current_date = date
+                current_state = state
+                current_state_start_time_str = string.format(
+                    '%02d/%02d/%04d, %02d:%02d:%02d',
+                    D, M, Y, h, m, s
+                )
             end
             if not (current_date == date) then
                 uptimes[current_date] = uptimes_day
@@ -211,11 +220,21 @@ local function get_uptimes()
                 resp_time = resp_time
             }
             uptimes[current_date] = uptimes_day
+            if not (current_state == state) then
+                current_state_start_time = seconds
+                current_state = state
+                current_state_start_time_str = string.format(
+                    '%02d/%02d/%04d, %02d:%02d:%02d',
+                    D, M, Y, h, m, s)
+            end
             current_state = state
+            current_state_time = seconds - current_state_start_time
             current_resp = string.format("%.3f", resp_time)
+            num_dp = num_dp + 1
         end
     end
-    return current_resp, current_state, uptimes
+    return current_resp, current_state, current_state_start_time_str,
+        current_state_time, uptimes, num_dp
 end
 
 
@@ -312,8 +331,8 @@ local function mkjs_dt_table(dt)
                 'new Date(%4d, %02d, %02d, %02d, %02d, %02d), {v:%d, f:\'%s\'}],\n'
         local line = string.format(
             fmt,
-            stY, stM, stD, sth, stm, sts,
-            edY, edM, edD, edh, edm, eds,
+            stY, stM - 1, stD, sth, stm, sts,
+            edY, edM - 1, edD, edh, edm, eds,
             out_s, out_label
         )
         --noinspection StringConcatenationInLoops
@@ -324,7 +343,8 @@ end
 
 -- main
 local out_mins = 2
-local current_resp, current_state, uptimes = get_uptimes()
+local current_resp, current_state, current_state_start,
+    current_state_seconds, uptimes, num_dp = get_uptimes()
 local daily_averages = compute_averages(uptimes)
 local daily_uptimes = compute_state_times(uptimes)
 local downtimes = mk_downtime_table(uptimes, out_mins)
@@ -340,21 +360,24 @@ html = string.gsub(html, '//DATA4', js)
 js = mkjs_dt_table(downtimes)
 html = string.gsub(html, '//DATA7', js)
 html = string.gsub(html, '//OUTMINS', out_mins)
-local state_s
-local bg_colour
+local state_s, bg_colour, heading_colour
 if current_state == 'up' then
     bg_colour = '#f8fff4'
-    state_s = '<span style="color: ForestGreen;">up</span>'
+    state_s = 'up'
+    heading_colour = 'DarkGreen'
 else
     bg_colour = '#fffaf9'
-    state_s = '<span style="color: OrangeRed;">down</span>'
+    state_s = 'down'
+    heading_colour = 'DarkRed'
 end
 html = string.gsub(html, '//AA_STATE', state_s)
-local date_s = os.date("%A, %x %H:%M", os.time())
+html = string.gsub(html, '//HEADING_COLOUR', heading_colour)
+local date_s = os.date("%A, %d/%m/%Y %H:%M", os.time())
 html = string.gsub(html, '//CURRENT_DT', date_s)
 html = string.gsub(html, '//BG_COLOUR', bg_colour)
 html = string.gsub(html, '//AA_RESPONSE', current_resp)
-local logo_img_uri = 'http://www.lancaster.ac.uk/media/wdp/style-assets/images/library/library.png'
+local logo_img_uri = 'http://www.lancaster.ac.uk/media/wdp/' ..
+        'style-assets/images/library/library.png'
 html = string.gsub(html, '//LOGO_IMG_URI', logo_img_uri)
 local logo_link_uri = 'http://lancaster.ac.uk/library'
 html = string.gsub(html, '//LOGO_LINK_URI', logo_link_uri)
@@ -362,6 +385,13 @@ local institution = 'Lancaster'
 html = string.gsub(html, '//INSTITUTION', institution)
 local alma_instance = 'EU00'
 html = string.gsub(html, '//ALMA_INSTANCE', alma_instance)
+local css_str = string.format("%02d:%02d:%02d",
+    current_state_seconds/(60*60),
+    current_state_seconds/60%60,
+    current_state_seconds%60)
+html = string.gsub(html, '//CURRENT_STATE_TIME', css_str)
+html = string.gsub(html, '//CURRENT_STATE_START', current_state_start)
+html = string.gsub(html, '//NUM_DATA_POINTS', num_dp)
 io.output(html_file)
 io.write(html)
 

@@ -27,7 +27,8 @@
                 title: "Analytics Hours Availability - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
                 calendar: {
-                    cellSize: 16
+                    cellSize: 16,
+                    colorAxis: {minValue: 22.0, maxValue: 24.0, colors: ['red', 'green']}
                 },
                 backgroundColor: "//BG_COLOUR"
             };
@@ -51,17 +52,31 @@
                 curveType: 'function',
                 hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
+                focusTarget: 'category',
                 trendlines: {
                     0: {
+                        tooltip: false,
                         type: 'polynomial',
                         color: 'green',
-                        lineWidth: 3,
-                        opacity: 0.5,
+                        lineWidth: 4,
+                        opacity: 0.6,
                         labelInLegend: 'Avg. Trend',
+                        visibleInLegend: true
+                    },
+                    1: {
+                        tooltip: false,
+                        type: 'polynomial',
+                        color: 'orange',
+                        lineWidth: 4,
+                        opacity: 0.6,
+                        labelInLegend: 'Med. Trend',
                         visibleInLegend: true
                     }
                 }
             };
+            var formatter = new google.visualization.DateFormat(
+                    {pattern: 'EEEE, dd/MM/yyyy'});
+            formatter.format(dataTable, 0);
             chart.draw(dataTable, options);
         }
 
@@ -83,6 +98,7 @@
                 backgroundColor: "//BG_COLOUR",
                 trendlines: {
                     0: {
+                        tooltip: false,
                         type: 'polynomial',
                         color: 'green',
                         lineWidth: 3,
@@ -92,6 +108,9 @@
                     }
                 }
             };
+            var formatter = new google.visualization.DateFormat(
+                    {pattern: 'EEEE, dd/MM/yyyy'});
+            formatter.format(dataTable, 0);
             chart.draw(dataTable, options);
         }
 
@@ -113,8 +132,10 @@
                 hAxis: {format: 'dd/MM/yy'},
                 vAxis: {minValue: 0, viewWindow: {min:0 }},
                 backgroundColor: "//BG_COLOUR",
+                focusTarget: 'category',
                 trendlines: {
                     0: {
+                        tooltip: false,
                         type: 'polynomial',
                         color: 'green',
                         lineWidth: 3,
@@ -124,6 +145,9 @@
                     }
                 }
             };
+            var formatter = new google.visualization.DateFormat(
+                    {pattern: 'EEEE, dd/MM/yyyy'});
+            formatter.format(dataTable, 0);
             chart.draw(dataTable, options);
         }
 
@@ -137,6 +161,7 @@
                 width: 140, height: 140,
                 redFrom: 8, redTo: 10,
                 yellowFrom: 6, yellowTo: 8,
+                greenFrom: 0, greenTo: 6,
                 minorTicks: 10,
                 max: 10, min: 0,
                 backgroundColor: "//BG_COLOUR"
@@ -168,7 +193,9 @@
                 allowHtml: true,
                 showRowNumber: true,
                 width: '75%',
-                alternatingRowStyle: true
+                alternatingRowStyle: true,
+                page: 'enable',
+                pageSize: 20
             });
         }
     </script>
@@ -189,15 +216,15 @@
     }
 </style>
 <style>
-    a.source_link:link {color: darkgray}
-    a.source_link:visited {color: darkgray}
-    a.source_link:hover {color: darkgreen}
-    a.source_link:active {color: darkgray}
+    a.source_link:link {text-decoration: none; color: #959595}
+    a.source_link:visited {text-decoration: none; color: #959595}
+    a.source_link:hover {text-decoration: underline; color: darkgreen}
+    a.source_link:active {text-decoration: none; color: #959595}
 </style>
 
 <section style="position: relative; width:95%; height: 140px;
     margin: auto; padding: 5px;">
-    <div style="float: left; width:20%; height: 140px; margin-top: 50px;">
+    <div style="float: left; width:20%; height: 140px; margin-top: 25px;">
         <div>
             <a href="//LOGO_LINK_URI">
                 <img style="width: 140%;"
@@ -205,17 +232,20 @@
             </a>
         </div>
         <div>
-            <p style="padding-left: 40px; color: darkgray; font-family: sans-serif; font-size: 10;">
-                Source code is <a class="source_link" href="https://github.com/lulibrary/analytics_monitor">here</a>.
+            <p style="padding-left: 40px; color: #959595; font-family: sans-serif; font-size: 11px;">
+                <a class="source_link" href="https://github.com/lulibrary/analytics_monitor">Source code @github</a>
+                <br/>
+                <a class="source_link" href="alma_analytics.log">Log file (//NUM_DATA_POINTS data points used)</a>
             <p>
         </div>
     </div>
     <div style=" width: 65%; float: left; height: 140px;
-        font-family: sans-serif; margin-top: 15px;">
-        <h1 style="text-align: center">
+        font-family: sans-serif; margin-top: 5px;">
+        <p style="text-align: center; color: #959595; font-family: sans-serif; font-size: small;">//CURRENT_DT</p>
+        <h1 style="color: //HEADING_COLOUR; text-align: center; padding-top: 0px;">
             Analytics - //INSTITUTION - //ALMA_INSTANCE -
             is //AA_STATE</h1>
-        <h4 style="text-align: center;">//CURRENT_DT</h4>
+        <p style="text-align: center; font-family: sans-serif; color: #959595; font-size: small;">since //CURRENT_STATE_START for //CURRENT_STATE_TIME</p>
     </div>
     <div id="chart_gauge"
          style="float: right; width: 15%; height: 140px"></div>
@@ -235,7 +265,7 @@
         including scheduled maintenance.
     </h5>
     <div id="chart_outage_table" style="display: block; margin: 0 auto;
-        width: 100%; height: 500px;"></div>
+        width: 100%; height: 520px;"></div>
 </div>
 </body>
 </html>

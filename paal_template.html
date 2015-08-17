@@ -27,8 +27,7 @@
                 title: "Analytics Hours Availability - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
                 calendar: {
-                    cellSize: 16,
-                    monthLabel: {fontSize: 10}
+                    cellSize: 16
                 },
                 backgroundColor: "//BG_COLOUR"
             };
@@ -189,14 +188,27 @@
         font-size: 15px;
     }
 </style>
+<style>
+    a.source_link:link {color: darkgray}
+    a.source_link:visited {color: darkgray}
+    a.source_link:hover {color: darkgreen}
+    a.source_link:active {color: darkgray}
+</style>
 
 <section style="position: relative; width:95%; height: 140px;
     margin: auto; padding: 5px;">
     <div style="float: left; width:20%; height: 140px; margin-top: 50px;">
-        <a href="//LOGO_LINK_URI">
-            <img style="width: 140%;"
-                 src="//LOGO_IMG_URI">
-        </a>
+        <div>
+            <a href="//LOGO_LINK_URI">
+                <img style="width: 140%;"
+                     src="//LOGO_IMG_URI">
+            </a>
+        </div>
+        <div>
+            <p style="padding-left: 40px; color: darkgray; font-family: sans-serif; font-size: 10;">
+                Source code is <a class="source_link" href="https://github.com/lulibrary/analytics_monitor">here</a>.
+            <p>
+        </div>
     </div>
     <div style=" width: 65%; float: left; height: 140px;
         font-family: sans-serif; margin-top: 15px;">

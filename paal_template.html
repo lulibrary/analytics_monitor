@@ -1,6 +1,6 @@
 <html>
 <head>
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="15">
     <script type="text/javascript"
             src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -24,10 +24,11 @@
             var chart = new google.visualization.Calendar(
                     document.getElementById('chart_calendar'));
             var options = {
-                title: "Alma Analytics Availability - " +
+                title: "Analytics Hours Availability - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
                 calendar: {
-                    cellSize: 16
+                    cellSize: 16,
+                    monthLabel: {fontSize: 10}
                 },
                 backgroundColor: "//BG_COLOUR"
             };
@@ -45,11 +46,11 @@
             var chart = new google.visualization.LineChart(
                     document.getElementById('chart_average'));
             var options = {
-                title: "Alma Analytics Response Time - Average & Median " +
+                title: "Analytics Response Time - Average & Median " +
                     "- //INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
-                hAxis: {format: 'MM-yy'},
+                hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
                 trendlines: {
                     0: {
@@ -75,11 +76,11 @@
             var chart = new google.visualization.LineChart(
                     document.getElementById('chart_mode'));
             var options = {
-                title: "Alma Analytics Response Time - Mode - " +
+                title: "Analytics Response Time - Mode - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
-                hAxis: {format: 'MM-yy'},
+                hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
                 trendlines: {
                     0: {
@@ -106,11 +107,11 @@
             var chart = new google.visualization.LineChart(
                     document.getElementById('chart_max_min'));
             var options = {
-                title: "Alma Analytics Response Time Max/Min - " +
+                title: "Analytics Response Time Max/Min - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
                 height: 400,
                 curveType: 'function',
-                hAxis: {format: 'MM-yy'},
+                hAxis: {format: 'dd/MM/yy'},
                 vAxis: {minValue: 0, viewWindow: {min:0 }},
                 backgroundColor: "//BG_COLOUR",
                 trendlines: {
@@ -200,7 +201,7 @@
     <div style=" width: 65%; float: left; height: 140px;
         font-family: sans-serif; margin-top: 15px;">
         <h1 style="text-align: center">
-            Alma Analytics - //INSTITUTION - //ALMA_INSTANCE -
+            Analytics - //INSTITUTION - //ALMA_INSTANCE -
             is //AA_STATE</h1>
         <h4 style="text-align: center;">//CURRENT_DT</h4>
     </div>
@@ -215,8 +216,10 @@
 <div id="chart_mode" style="width: 100%; height: 350px;"></div>
 <div id="chart_max_min" style="width: 100%; height: 350px;"></div>
 <div align="center">
-    <h5 style="margin-top: 60px; font-family: sans-serif; font-size: 16px;">
-        Outages - //INSTITUTION - //ALMA_INSTANCE (>= //OUTMINS minutes),
+    <h5 style="margin-top: 60px; font-family:
+        sans-serif; font-size: 16px;">
+        Analytics outages - //INSTITUTION - //ALMA_INSTANCE
+        (>=//OUTMINS minutes),
         including scheduled maintenance.
     </h5>
     <div id="chart_outage_table" style="display: block; margin: 0 auto;

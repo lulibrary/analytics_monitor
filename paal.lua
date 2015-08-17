@@ -194,24 +194,26 @@ local function get_uptimes()
         local h, m, s = ss(ts, 10, 11), ss(ts, 12, 13), ss(ts, 14, 15)
         local date = Y .. M .. D
         local time = h .. m .. s
-        local seconds = ts2secs(Y, M, D, h, m, s)
-        if first then
-            first = false
-            current_date = date
-        end
-        if not (current_date == date) then
+        if not (date == '20150806') then -- ignoring first day of partial data
+            local seconds = ts2secs(Y, M, D, h, m, s)
+            if first then
+                first = false
+                current_date = date
+            end
+            if not (current_date == date) then
+                uptimes[current_date] = uptimes_day
+                uptimes_day = {}
+                current_date = date
+            end
+            uptimes_day[time] = {
+                state = state,
+                seconds = seconds,
+                resp_time = resp_time
+            }
             uptimes[current_date] = uptimes_day
-            uptimes_day = {}
-            current_date = date
+            current_state = state
+            current_resp = string.format("%.3f", resp_time)
         end
-        uptimes_day[time] = {
-            state = state,
-            seconds = seconds,
-            resp_time = resp_time
-        }
-        uptimes[current_date] = uptimes_day
-        current_state = state
-        current_resp = string.format("%.3f", resp_time)
     end
     return current_resp, current_state, uptimes
 end
@@ -291,6 +293,7 @@ local function mk_downtime_table(u, min_len)
     return dt_table
 end
 
+
 local function mkjs_dt_table(dt)
     local js = ''
     for _, incident in pairs(dt) do
@@ -361,3 +364,4 @@ local alma_instance = 'EU00'
 html = string.gsub(html, '//ALMA_INSTANCE', alma_instance)
 io.output(html_file)
 io.write(html)
+

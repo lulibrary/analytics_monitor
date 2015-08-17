@@ -27,6 +27,7 @@ for viewing.
 
 ## To do
 
-- Maybe store the log entries and results in a database rather than keep
-processing the whole log file.
+- Store the log entries and results in a database rather than keep
+processing the whole log file. Currently runs fast but as the logfile
+gets larger .....
 

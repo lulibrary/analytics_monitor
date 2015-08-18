@@ -57,6 +57,7 @@
                 hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
                 focusTarget: 'category',
+                vAxis: {title: 'Resp. time in seconds'},
                 trendlines: {
                     0: {
                         tooltip: false,
@@ -100,6 +101,7 @@
                 curveType: 'function',
                 hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
+                vAxis: {title: 'Resp. time in seconds'},
                 trendlines: {
                     0: {
                         tooltip: false,
@@ -137,6 +139,7 @@
                 vAxis: {minValue: 0, viewWindow: {min:0 }},
                 backgroundColor: "//BG_COLOUR",
                 focusTarget: 'category',
+                vAxis: {title: 'Resp. time in seconds'},
                 trendlines: {
                     0: {
                         tooltip: false,
@@ -158,7 +161,7 @@
         function drawChartGauge() {
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['Response', //AA_RESPONSE
+                ['Seconds', //AA_RESPONSE
                 ]
             ]);
             var options = {
@@ -264,8 +267,10 @@
             since //CURRENT_STATE_START for //CURRENT_STATE_TIME
         </p>
     </div>
+    <div>
     <div id="chart_gauge"
          style="float: right; width: 15%; height: 140px"></div>
+    </div>
 </section>
 
 <div id="chart_calendar" style="width: 980px; height: auto;

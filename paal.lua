@@ -4,6 +4,7 @@ local datafile = 'alma_analytics.log'
 local html_template = 'paal_template.html'
 local html_file = 'paal.html'
 local ss = string.sub
+local unpack = unpack or table.unpack
 
 
 --[[
@@ -266,7 +267,7 @@ local function mkjs(date_data, fields)
         end
         local fmt = '[new Date(%s, %s, %s), ' ..
                 repeat_s('%s', nfields) .. '],\n'
-        local line = string.format(fmt, Y, M, D, table.unpack(data_list))
+        local line = string.format(fmt, Y, M, D, unpack(data_list))
         --noinspection StringConcatenationInLoops
         js = js .. line
     end

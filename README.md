@@ -3,8 +3,10 @@
 ## Foibles
 
 - paal = process alma analytics log.
+
 - For the current day the current state is assumed to last till the end
 of the day.
+
 - There is a lot of plumbing between a local API call to analytics and
 Analytics at the data centre. All of which affects response times.
 
@@ -31,8 +33,12 @@ for viewing.
 ## To do
 
 - Store the log entries and results in a database rather than keep
-processing the whole log file. Currently runs fast but as the logfile
-grows .....
+processing the whole log file. Then it should be possible to plug the
+graphs into a datasource rather than generating a page with all the
+data in it. Currently runs fast but as the logfile grows ..... It will
+do for now.
+
 - Clean up the mess that is paal_template.html.
+
 - Probably many other things should someone be interested.
 

@@ -28,7 +28,11 @@
                     "//INSTITUTION - //ALMA_INSTANCE",
                 calendar: {
                     cellSize: 16,
-                    colorAxis: {minValue: 22.0, maxValue: 24.0, colors: ['red', 'green']}
+                    colorAxis: {
+                        minValue: 22.0,
+                        maxValue: 24.0,
+                        colors: ['red', 'green']
+                    }
                 },
                 backgroundColor: "//BG_COLOUR"
             };
@@ -231,20 +235,34 @@
             </a>
         </div>
         <div>
-            <p style="padding-left: 40px; color: #959595; font-family: sans-serif; font-size: 11px;">
-                <a class="source_link" href="https://github.com/lulibrary/analytics_monitor">Source code @github</a>
+            <p style="padding-left: 40px; color: #959595;
+                font-family: sans-serif; font-size: 11px;">
+                <a class="source_link"
+                    href="https://github.com/lulibrary/analytics_monitor">
+                    Source code @github
+                </a>
                 <br/>
-                <a class="source_link" href="alma_analytics.log">Log file (//NUM_DATA_POINTS data points used)</a>
+                <a class="source_link" href="alma_analytics.log.gz">
+                    Log file (//NUM_DATA_POINTS data points used)
+                </a>
             <p>
         </div>
     </div>
     <div style=" width: 65%; float: left; height: 140px;
         font-family: sans-serif; margin-top: 5px;">
-        <p style="text-align: center; color: #959595; font-family: sans-serif; font-size: small;">//CURRENT_DT</p>
-        <h1 style="color: //HEADING_COLOUR; text-align: center; padding-top: 0px;">
+        <p style="text-align: center; color: #959595;
+            font-family: sans-serif; font-size: small;">
+            //CURRENT_DT
+        </p>
+        <h1 style="color: //HEADING_COLOUR; text-align:
+            center; padding-top: 0px;">
             Analytics - //INSTITUTION - //ALMA_INSTANCE -
-            is //AA_STATE</h1>
-        <p style="text-align: center; font-family: sans-serif; color: #959595; font-size: small;">since //CURRENT_STATE_START for //CURRENT_STATE_TIME</p>
+            is //AA_STATE
+        </h1>
+        <p style="text-align: center; font-family: sans-serif;
+            color: //HEADING_COLOUR; font-size: small;">
+            since //CURRENT_STATE_START for //CURRENT_STATE_TIME
+        </p>
     </div>
     <div id="chart_gauge"
          style="float: right; width: 15%; height: 140px"></div>

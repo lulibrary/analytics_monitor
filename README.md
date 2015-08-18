@@ -13,9 +13,9 @@ Analytics at the data centre. All of which affects response times.
 ## How it works
 
 The script `check_analytics` make an API call to Alma Analytics. You can
-use any of your own reports. The output of this script is for input to
-Nagios/Check-MK infrastructure monitoring tools but it also creates a
-log file with entries like:
+use any of your own reports (choose a lightweight one). The output of
+this script is for input to Nagios/Check-MK infrastructure monitoring
+tools but it also creates a log file with entries like:
 
 
     20150813:142825 up time=0.628s

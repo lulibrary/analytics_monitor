@@ -105,7 +105,7 @@ end
 local function compute_averages(u)
     local daily_averages = {}
     for date, day_data in spairs(u) do
-        local sum, c, min, max = 0, 0, 999, 0
+        local mean, mode, sum, c, min, max = 0, 0, 0, 0, 999, 0
         local mm_table = {}
         for _, data in spairs(day_data) do
             local rt = tonumber(data['resp_time'])
@@ -115,13 +115,15 @@ local function compute_averages(u)
             if (rt <= min) then min = rt end
             if (rt >= max) then max = rt end
         end
+        mean = sum / c
+        mode = compute_mode(mm_table)
         daily_averages[date] = {
-            mean = sum / c,
+            mean = mean,
             median = compute_median(mm_table),
             min = min,
             max = max,
             range = max - min,
-            mode = compute_mode(mm_table)
+            mode = mode
         }
     end
     return daily_averages

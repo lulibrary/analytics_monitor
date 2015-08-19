@@ -164,11 +164,15 @@ local function compute_state_times(u)
         local midnight = dt2secs(date, '235959') + 1
         up, down = sum_state_secs(up, down,
             midnight - last_es, last_state)
+        local up_hours = up / 60 / 60
+        local down_hours = down / 60 / 60
+        local pct_up = string.format('%03.3f', up_hours / 24 * 100)
         daily_uptime[date] = {
             up = up,
             down = down,
-            up_hours = up / 60 / 60,
-            down_hours = down / 60 / 60
+            up_hours = up_hours,
+            down_hours = down_hours,
+            pct_up = pct_up
         }
     end
     return (daily_uptime)
@@ -256,7 +260,7 @@ local function mkjs(date_data, fields)
     local precisions = {
         mean = 2, median = 1, mode = 3,
         range = 1, max = 1, min = 1,
-        up_hours = 2, down_hours = 2
+        up_hours = 2, down_hours = 2, pct_up = 3
     }
     local js = ''
     local nfields = #fields
@@ -362,6 +366,8 @@ js = mkjs(daily_averages, {'max', 'min'})
 html = string.gsub(html, '//DATA4', js)
 js = mkjs_dt_table(downtimes)
 html = string.gsub(html, '//DATA7', js)
+js = mkjs(daily_uptimes, {'pct_up'})
+html = string.gsub(html, '//DATA8', js)
 html = string.gsub(html, '//OUTMINS', out_mins)
 local state_s, bg_colour, heading_colour
 if current_state == 'up' then

@@ -20,6 +20,10 @@ tools but it also creates a log file with entries like:
 
     20150813:142825 up time=0.628s
     20150813:142928 up time=3.474s
+    
+Nagios/Check-MK calls this script about once a minute and the report
+currently returns about 2K of data, so 1440 calls a day for a total data
+transfer of 2.81 MB
 
 This log file is used as input to the lua script `paal.lua` which computes
 the averages for response and calculates the daily uptimes. It uses

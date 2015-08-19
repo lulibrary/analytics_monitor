@@ -52,12 +52,15 @@
             var options = {
                 title: "Analytics Response Time - Average & Median " +
                     "- //INSTITUTION - //ALMA_INSTANCE",
-                height: 400,
-                curveType: 'function',
+                height: 300,
+                curveType: 'none',
                 hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
                 focusTarget: 'category',
-                vAxis: {title: 'Resp. time in seconds', viewWindowMode: 'maximized'},
+                vAxis: {
+                    title: 'Resp. time in seconds',
+                    viewWindowMode: 'pretty'
+                },
                 trendlines: {
                     0: {
                         tooltip: false,
@@ -97,11 +100,14 @@
             var options = {
                 title: "Analytics Response Time - Mode - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
-                height: 400,
-                curveType: 'function',
+                height: 300,
+                curveType: 'none',
                 hAxis: {format: 'dd/MM/yy'},
                 backgroundColor: "//BG_COLOUR",
-                vAxis: {title: 'Resp. time in seconds'},
+                vAxis: {
+                    title: 'Resp. time in seconds',
+                    viewWindowMode: 'pretty'
+                },
                 trendlines: {
                     0: {
                         tooltip: false,
@@ -133,10 +139,12 @@
             var options = {
                 title: "Analytics Response Time Max/Min - " +
                     "//INSTITUTION - //ALMA_INSTANCE",
-                height: 400,
-                curveType: 'function',
+                height: 300,
+                curveType: 'none',
                 hAxis: {format: 'dd/MM/yy'},
-                vAxis: {minValue: 0, viewWindow: {min:0 }},
+                vAxis: {
+                    viewWindowMode: 'pretty'
+                },
                 backgroundColor: "//BG_COLOUR",
                 focusTarget: 'category',
                 vAxis: {title: 'Resp. time in seconds'},
@@ -274,9 +282,9 @@
 <div id="chart_calendar" style="width: 980px; height: auto;
     overflow: hidden; margin-top: 45px; margin-left: auto;
     margin-right: auto;"></div>
-<div id="chart_average" style="width: 100%; height: 350px;"></div>
-<div id="chart_mode" style="width: 100%; height: 350px;"></div>
-<div id="chart_max_min" style="width: 100%; height: 350px;"></div>
+<div id="chart_average" style="width: 100%; height: 300px;"></div>
+<div id="chart_mode" style="width: 100%; height: 300px;"></div>
+<div id="chart_max_min" style="width: 100%; height: 300px;"></div>
 <div align="center">
     <h5 style="margin-top: 60px; font-family:
         sans-serif; font-size: 16px;">

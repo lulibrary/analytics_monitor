@@ -421,9 +421,9 @@ html = string.gsub(html, '//INSTITUTION', institution)
 local alma_instance = 'EU00'
 html = string.gsub(html, '//ALMA_INSTANCE', alma_instance)
 local css_str = string.format("%02d:%02d:%02d",
-    current_state_seconds/(60*60),
-    current_state_seconds/60%60,
-    current_state_seconds%60)
+    current_state_seconds / (60 * 60),
+    current_state_seconds / 60 % 60,
+    current_state_seconds % 60)
 html = string.gsub(html, '//CURRENT_STATE_TIME', css_str)
 html = string.gsub(html, '//CURRENT_STATE_START', current_state_start)
 html = string.gsub(html, '//NUM_DATA_POINTS', num_dp)

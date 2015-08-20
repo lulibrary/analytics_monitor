@@ -8,7 +8,7 @@
                 {packages: ["corechart", "line", "calendar",
                     "gauge", "scatter", "table"]});
         google.setOnLoadCallback(drawChartCalendar);
-        google.setOnLoadCallback(drawChartCalendar2);
+        google.setOnLoadCallback(drawChartPct);
         google.setOnLoadCallback(drawChartAvg);
         google.setOnLoadCallback(drawChartMode);
         google.setOnLoadCallback(drawChartMaxMin);
@@ -18,37 +18,13 @@
         function drawChartCalendar() {
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn({type: 'date', id: 'Date'});
-            dataTable.addColumn({type: 'number', id: 'Hours up'});
+            dataTable.addColumn({type: 'number', id: '% up'});
+            dataTable.addColumn({type: 'string', role: 'tooltip', 'p': {'html': true}})
             dataTable.addRows([
                 //DATA1
             ]);
             var chart = new google.visualization.Calendar(
                     document.getElementById('chart_calendar'));
-            var options = {
-                title: "Analytics Hours Availability - " +
-                    "//INSTITUTION - //ALMA_INSTANCE",
-                calendar: {
-                    cellSize: 16,
-                    colorAxis: {
-                        minValue: 22.0,
-                        maxValue: 24.0,
-                        colors: ['red', 'green']
-                    }
-                },
-                backgroundColor: "//BG_COLOUR"
-            };
-            chart.draw(dataTable, options);
-        }
-
-        function drawChartCalendar2() {
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn({type: 'date', id: 'Date'});
-            dataTable.addColumn({type: 'number', id: '% up'});
-            dataTable.addRows([
-                //DATA8
-            ]);
-            var chart = new google.visualization.Calendar(
-                    document.getElementById('chart_calendar2'));
             var options = {
                 title: "Analytics % Availability - " +
                 "//INSTITUTION - //ALMA_INSTANCE",
@@ -60,8 +36,47 @@
                         colors: ['red', 'green']
                     }
                 },
+                tooltip: { isHtml: true },
                 backgroundColor: "//BG_COLOUR"
             };
+            chart.draw(dataTable, options);
+        }
+
+        function drawChartPct() {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('date', 'Date');
+            dataTable.addColumn('number', '%Uptime');
+            dataTable.addRows([
+                //DATA8
+            ]);
+            var chart = new google.visualization.LineChart(
+                    document.getElementById('chart_pct'));
+            var options = {
+                title: "Analytics % Uptime - " +
+                "//INSTITUTION - //ALMA_INSTANCE",
+                height: 300,
+                curveType: 'none',
+                hAxis: {format: 'dd/MM/yy'},
+                backgroundColor: "//BG_COLOUR",
+                vAxis: {
+                    title: '%Uptime',
+                    viewWindowMode: 'maximized'
+                },
+                trendlines: {
+                    0: {
+                        tooltip: false,
+                        type: 'polynomial',
+                        color: 'green',
+                        lineWidth: 3,
+                        opacity: 0.5,
+                        labelInLegend: '%Uptime Trend',
+                        visibleInLegend: true
+                    }
+                }
+            };
+            var formatter = new google.visualization.DateFormat(
+                    {pattern: 'EEEE, dd/MM/yyyy'});
+            formatter.format(dataTable, 0);
             chart.draw(dataTable, options);
         }
 
@@ -308,9 +323,7 @@
 <div id="chart_calendar" style="width: 980px; height: auto;
     overflow: hidden; margin-top: 45px; margin-left: auto;
     margin-right: auto;"></div>
-<div id="chart_calendar2" style="width: 980px; height: auto;
-    overflow: hidden; margin-top: 45px; margin-left: auto;
-    margin-right: auto;"></div>
+<div id="chart_pct" style="width: 100%; height: 300px;"></div>
 <div id="chart_average" style="width: 100%; height: 300px;"></div>
 <div id="chart_mode" style="width: 100%; height: 300px;"></div>
 <div id="chart_max_min" style="width: 100%; height: 300px;"></div>

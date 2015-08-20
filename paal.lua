@@ -281,6 +281,26 @@ local function mkjs(date_data, fields)
 end
 
 
+local function mkjs_calendar(date_data)
+    local js = ''
+    for d, data in spairs(date_data) do
+        local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
+        local h = data['up_hours']
+        local p = data['pct_up']
+        local date_str = os.date('%d %B %Y', os.time(
+            {year = Y, month = M + 1, day = D})
+        )
+        date_str = string.gsub(date_str, '^0', '')
+        local fmt = '[new Date(%s, %s, %s), %.3f, ' ..
+                '\'<p style="font-family: sans-serif; font-size: 16px;' ..
+                '">%s: <b>%0.3f</b>%%%% = <b>%0.2f</b> hours</p>\'],\n'
+        local line = string.format(fmt, Y, M, D, p, date_str, p, h)
+        js = js .. line
+    end
+    return js
+end
+
+
 local function mk_downtime_table(u, min_len)
     local dt_table = {}
     local current_state, first = nil , true
@@ -356,7 +376,7 @@ local daily_averages = compute_averages(uptimes)
 local daily_uptimes = compute_state_times(uptimes)
 local downtimes = mk_downtime_table(uptimes, out_mins)
 local t_html = readfile(html_template)
-local js = mkjs(daily_uptimes, {'up_hours'})
+local js = mkjs_calendar(daily_uptimes)
 local html = string.gsub(t_html, '//DATA1', js)
 js = mkjs(daily_averages, {'mean', 'median'})
 html = string.gsub(html, '//DATA2', js)
@@ -403,4 +423,3 @@ html = string.gsub(html, '//CURRENT_STATE_START', current_state_start)
 html = string.gsub(html, '//NUM_DATA_POINTS', num_dp)
 io.output(html_file)
 io.write(html)
-

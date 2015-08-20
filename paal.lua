@@ -256,7 +256,7 @@ local function repeat_s(s, n)
 end
 
 
-local function mkjs(date_data, fields)
+local function mkjs(date_data, fields, excl_we)
     local precisions = {
         mean = 2, median = 1, mode = 3,
         range = 1, max = 1, min = 1,
@@ -267,15 +267,19 @@ local function mkjs(date_data, fields)
     for d, data in spairs(date_data) do
         local data_list = {}
         local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
-        for _, f in pairs(fields) do
-            local format = '%.' .. precisions[f] .. 'f'
-            data_list[#data_list + 1] = string.format(format, data[f])
+        local day_of_week = os.date('%a', os.time(
+            {year = Y, month = M + 1, day = D}))
+        if not (excl_we and ((day_of_week == 'Sat') or (day_of_week == 'Sun'))) then
+            for _, f in pairs(fields) do
+                local format = '%.' .. precisions[f] .. 'f'
+                data_list[#data_list + 1] = string.format(format, data[f])
+            end
+            local fmt = '[new Date(%s, %s, %s), ' ..
+                    repeat_s('%s', nfields) .. '],\n'
+            local line = string.format(fmt, Y, M, D, unpack(data_list))
+            --noinspection StringConcatenationInLoops
+            js = js .. line
         end
-        local fmt = '[new Date(%s, %s, %s), ' ..
-                repeat_s('%s', nfields) .. '],\n'
-        local line = string.format(fmt, Y, M, D, unpack(data_list))
-        --noinspection StringConcatenationInLoops
-        js = js .. line
     end
     return js
 end
@@ -388,6 +392,8 @@ js = mkjs_dt_table(downtimes)
 html = string.gsub(html, '//DATA7', js)
 js = mkjs(daily_uptimes, {'pct_up'})
 html = string.gsub(html, '//DATA8', js)
+js = mkjs(daily_uptimes, {'pct_up'}, true)
+html = string.gsub(html, '//DATA9', js)
 html = string.gsub(html, '//OUTMINS', out_mins)
 local state_s, bg_colour, heading_colour
 if current_state == 'up' then

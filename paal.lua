@@ -195,6 +195,7 @@ local function get_uptimes()
     local current_date, current_state, current_resp
     local current_state_start_time, current_state_time = 0, 0
     local current_state_start_time_str
+    local down_count = 0
     for l in io.lines(datafile) do
         local lt = {}
         for w in string.gmatch(l, '%S+') do
@@ -211,6 +212,7 @@ local function get_uptimes()
                 first = false
                 current_date = date
                 current_state = state
+                if state == 'down' then down_count = 1 end
                 current_state_start_time_str = string.format(
                     '%02d/%02d/%04d, %02d:%02d:%02d',
                     D, M, Y, h, m, s
@@ -227,9 +229,17 @@ local function get_uptimes()
                 resp_time = resp_time
             }
             uptimes[current_date] = uptimes_day
+            -- the following block ignores one off 'downs'
+            if state == 'down' then
+                down_count = down_count + 1
+                if down_count < 2 then
+                    state = 'up'
+                end
+            else
+                down_count = 0
+            end
             if not (current_state == state) then
                 current_state_start_time = seconds
-                current_state = state
                 current_state_start_time_str = string.format(
                     '%02d/%02d/%04d, %02d:%02d:%02d',
                     D, M, Y, h, m, s)

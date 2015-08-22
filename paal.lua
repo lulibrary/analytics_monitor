@@ -314,6 +314,23 @@ local function mkjs_calendar(date_data)
     return js
 end
 
+local function mkjs_calendar_table(date_data)
+    local js = ''
+    for d, data in spairs(date_data) do
+        local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
+        local h = data['up_hours']
+        local p = data['pct_up']
+        local date_str = os.date('%d %B %Y', os.time(
+            {year = Y, month = M + 1, day = D})
+        )
+        date_str = string.gsub(date_str, '^0', '')
+        local fmt = '[new Date(%s, %s, %s), %.3f, %.2f],\n'
+        local line = string.format(fmt, Y, M, D, p, h)
+        js = js .. line
+    end
+    return js
+end
+
 
 local function mk_downtime_table(u, min_len)
     local dt_table = {}
@@ -404,6 +421,10 @@ js = mkjs(daily_uptimes, {'pct_up'})
 html = string.gsub(html, '//DATA8', js)
 js = mkjs(daily_uptimes, {'pct_up'}, true)
 html = string.gsub(html, '//DATA9', js)
+js = mkjs_calendar_table(daily_uptimes)
+print(js)
+html = string.gsub(html, '//DATA5', js)
+html = string.gsub(html, '//OUTMINS', out_mins)
 html = string.gsub(html, '//OUTMINS', out_mins)
 local state_s, bg_colour, heading_colour
 if current_state == 'up' then

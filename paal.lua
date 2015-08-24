@@ -309,6 +309,7 @@ local function mkjs_calendar(date_data)
                 '\'<p style="font-family: sans-serif; font-size: 16px;' ..
                 '">%s: <b>%0.3f</b>%%%% = <b>%0.2f</b> hours</p>\'],\n'
         local line = string.format(fmt, Y, M, D, p, date_str, p, h)
+        --noinspection StringConcatenationInLoops
         js = js .. line
     end
     return js
@@ -324,13 +325,14 @@ local function mkjs_calendar_table(date_data, avg_data)
             {year = Y, month = M + 1, day = D})
         )
         date_str = string.gsub(date_str, '^0', '')
-        mean = avg_data[d]['mean']
-        median = avg_data[d]['median']
-        mode = avg_data[d]['mode']
-        min = avg_data[d]['min']
-        max = avg_data[d]['max']
+        local mean = avg_data[d]['mean']
+        local median = avg_data[d]['median']
+        local mode = avg_data[d]['mode']
+        local min = avg_data[d]['min']
+        local max = avg_data[d]['max']
         local fmt = '[new Date(%s, %s, %s), %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f],\n'
         local line = string.format(fmt, Y, M, D, p, h, mean, median, mode, min, max)
+        --noinspection StringConcatenationInLoops
         js = js .. line
     end
     return js
@@ -432,6 +434,7 @@ local function mkjs_monthly(mt)
         local Y, M = ss(month, 1, 4), ss(month, 5, 6)
         local fmt = '[new Date(%s, %s, 0), %.3f],\n'
         local line = string.format(fmt, Y, M, p)
+        --noinspection StringConcatenationInLoops
         js = js .. line
     end
     return js

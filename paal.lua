@@ -373,7 +373,7 @@ end
 
 local function mkjs_dt_table(dt)
     local js = ''
-    for _, incident in pairs(dt) do
+    for _, incident in spairs(dt) do
         local sd = incident['start_dt']
         local ed = incident['end_dt']
         local stY, stM, stD = ss(sd, 1, 4), ss(sd, 5, 6), ss(sd, 7, 8)
@@ -394,6 +394,39 @@ local function mkjs_dt_table(dt)
             out_s, out_label
         )
         --noinspection StringConcatenationInLoops
+        js = js .. line
+    end
+    return js
+end
+
+
+local function compute_monthly_uptimes(dt)
+    local mt = {}
+    local c = 0
+    local p_sum = 0
+    for date, day in spairs(dt) do
+        local p = day['pct_up']
+        local month = ss(date, 1, 6)
+        if not mt[month] then
+            mt[month] = p
+            c = 1
+            p_sum = p
+        else
+            c = c + 1
+            p_sum = p_sum + p
+            mt[month] = p_sum / c
+        end
+    end
+    return mt
+end
+
+
+local function mkjs_monthly(mt)
+    local js = ''
+    for month, p in spairs(mt) do
+        local Y, M = ss(month, 1, 4), ss(month, 5, 6)
+        local fmt = '[new Date(%s, %s, 0), %.3f],\n'
+        local line = string.format(fmt, Y, M, p)
         js = js .. line
     end
     return js
@@ -423,6 +456,9 @@ js = mkjs(daily_uptimes, {'pct_up'}, true)
 html = string.gsub(html, '//DATA9', js)
 js = mkjs_calendar_table(daily_uptimes)
 html = string.gsub(html, '//DATA5', js)
+local monthly_uptimes = compute_monthly_uptimes(daily_uptimes)
+js = mkjs_monthly(monthly_uptimes)
+html = string.gsub(html, '//DATA6', js)
 html = string.gsub(html, '//OUTMINS', out_mins)
 html = string.gsub(html, '//OUTMINS', out_mins)
 local state_s, bg_colour, heading_colour

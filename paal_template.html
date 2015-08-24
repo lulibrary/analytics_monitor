@@ -298,6 +298,11 @@
             data.addColumn('datetime', 'Day');
             data.addColumn('number', '%');
             data.addColumn('number', 'Hours');
+            data.addColumn('number', 'Avg.');
+            data.addColumn('number', 'Median');
+            data.addColumn('number', 'Mode');
+            data.addColumn('number', 'Min');
+            data.addColumn('number', 'Max');
             data.addRows([
                 //DATA5
             ]);
@@ -312,7 +317,7 @@
                 sortColumn: 0,
                 allowHtml: true,
                 showRowNumber: false,
-                width: '75%',
+                width: '100%',
                 alternatingRowStyle: true,
                 page: 'enable',
                 pageSize: 20

@@ -314,7 +314,7 @@ local function mkjs_calendar(date_data)
     return js
 end
 
-local function mkjs_calendar_table(date_data)
+local function mkjs_calendar_table(date_data, avg_data)
     local js = ''
     for d, data in spairs(date_data) do
         local Y, M, D = ss(d, 1, 4), ss(d, 5, 6) - 1, ss(d, 7, 8)
@@ -324,8 +324,13 @@ local function mkjs_calendar_table(date_data)
             {year = Y, month = M + 1, day = D})
         )
         date_str = string.gsub(date_str, '^0', '')
-        local fmt = '[new Date(%s, %s, %s), %.3f, %.2f],\n'
-        local line = string.format(fmt, Y, M, D, p, h)
+        mean = avg_data[d]['mean']
+        median = avg_data[d]['median']
+        mode = avg_data[d]['mode']
+        min = avg_data[d]['min']
+        max = avg_data[d]['max']
+        local fmt = '[new Date(%s, %s, %s), %.3f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f],\n'
+        local line = string.format(fmt, Y, M, D, p, h, mean, median, mode, min, max)
         js = js .. line
     end
     return js
@@ -454,7 +459,7 @@ js = mkjs(daily_uptimes, {'pct_up'})
 html = string.gsub(html, '//DATA8', js)
 js = mkjs(daily_uptimes, {'pct_up'}, true)
 html = string.gsub(html, '//DATA9', js)
-js = mkjs_calendar_table(daily_uptimes)
+js = mkjs_calendar_table(daily_uptimes, daily_averages)
 html = string.gsub(html, '//DATA5', js)
 local monthly_uptimes = compute_monthly_uptimes(daily_uptimes)
 js = mkjs_monthly(monthly_uptimes)

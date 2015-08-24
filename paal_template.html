@@ -305,7 +305,7 @@
             var table = new google.visualization.Table(
                     document.getElementById('chart_pct_table'));
             var formatter = new google.visualization.DateFormat(
-                    {pattern: 'dd/MM/yyyy HH:mm:ss - EEEE'});
+                    {pattern: 'dd/MM/yyyy - EEEE'});
             formatter.format(data, 0);
             table.draw(data, {
                 sortAscending: false,
